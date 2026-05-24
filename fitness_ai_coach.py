@@ -5,13 +5,18 @@ AI 智能健身私教系统 v3.0
 """
 
 import streamlit as st
-import cv2
 import numpy as np
 import tempfile
 import os
 import time
 import threading
 from collections import deque
+
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except (ImportError, OSError):
+    CV2_AVAILABLE = False
 from database import (save_workout, get_workout_history, get_weekly_summary,
                       get_monthly_summary, get_streak, save_body_stats,
                       get_body_stats_history, save_plan_progress, get_plan_progress,
@@ -304,8 +309,11 @@ def estimate_calories(exercise, duration_sec, reps=0):
 
 @st.cache_resource
 def load_model():
-    from mediapipe.tasks import python
-    from mediapipe.tasks.python import vision
+    try:
+        from mediapipe.tasks import python
+        from mediapipe.tasks.python import vision
+    except (ImportError, OSError):
+        return None
     model_path = "pose_landmarker.task"
     if not os.path.exists(model_path):
         import urllib.request
@@ -618,6 +626,9 @@ def make_counter(key):
 
 def process_video(video_path, exercise_name):
     landmarker = load_model()
+    if landmarker is None:
+        st.error("视频分析功能不可用：mediapipe 未安装")
+        return
     from mediapipe import Image, ImageFormat
     cap = cv2.VideoCapture(video_path)
     fps = int(cap.get(cv2.CAP_PROP_FPS)) or 30
@@ -669,6 +680,9 @@ def process_video(video_path, exercise_name):
 
 def process_webcam(exercise_name):
     landmarker = load_model()
+    if landmarker is None:
+        st.error("视频分析功能不可用：mediapipe 未安装")
+        return
     from mediapipe import Image, ImageFormat
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
