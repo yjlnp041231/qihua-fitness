@@ -1,2 +1,0 @@
-opencv-contrib-python==999.999.999
-opencv-python==999.999.999
