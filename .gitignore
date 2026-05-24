@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+*.egg
+
+# Virtual Environment
+venv/
+.venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Data files
+*.db
+*.sqlite3
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Model files
+*.task
+*.tflite
+*.onnx
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Streamlit
+.streamlit/
