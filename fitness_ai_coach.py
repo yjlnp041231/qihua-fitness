@@ -309,9 +309,13 @@ def load_model():
     model_path = "pose_landmarker.task"
     if not os.path.exists(model_path):
         import urllib.request
-        urllib.request.urlretrieve(
-            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_heavy/float16/1/pose_landmarker_heavy.task",
-            model_path)
+        try:
+            urllib.request.urlretrieve(
+                "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_heavy/float16/1/pose_landmarker_heavy.task",
+                model_path)
+        except Exception as e:
+            st.error(f"模型下载失败: {e}")
+            st.stop()
     base = python.BaseOptions(model_asset_path=model_path)
     opts = vision.PoseLandmarkerOptions(
         base_options=base, running_mode=vision.RunningMode.VIDEO,
